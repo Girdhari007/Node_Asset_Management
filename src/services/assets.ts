@@ -20,7 +20,16 @@ export const createAsset = async (data: Asset) => {
 };
 
 //get all assets
-export const getAllAssets = async () => {
+export const getAllAssets = async (status?: string) => {
+  //filter for status
+   if (status) {
+    const [rows] = await db.query(
+      "SELECT * FROM assets WHERE status = ?",
+      [status]
+    );
+    return rows;
+  }
+
   const [rows] = await db.query("SELECT * FROM assets");
   return rows as Asset[];
 }
@@ -31,3 +40,17 @@ export const getAssetById = async (id: number) => {
   if ((rows as any[]).length === 0) throw new Error("Asset not found");
   return (rows as any[])[0] as Asset;
 }
+
+export const markAvailable = async (asset_id: number) => {
+  await db.query(`UPDATE assets SET status='AVAILABLE' WHERE id=?`, [asset_id]);
+  const [rows] = await db.query("SELECT * FROM assets WHERE id = ?", [asset_id]);
+  if ((rows as any[]).length === 0) throw new Error("Asset not found");
+  return (rows as any[])[0] as Asset;
+};
+
+export const markAssigned = async (asset_id: number) => {
+  await db.query(`UPDATE assets SET status='ASSIGNED' WHERE id=? and status='AVAILABLE'`, [asset_id]);
+  const [rows] = await db.query("SELECT * FROM assets WHERE id = ? and status='ASSIGNED'", [asset_id]);
+  if ((rows as any[]).length === 0) throw new Error("Asset not found");
+  return (rows as any[])[0] as Asset;
+};

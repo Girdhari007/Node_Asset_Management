@@ -1,5 +1,6 @@
 import { db } from "../config/db";
 import { Assignment } from "../models/assignAssets";
+import * as assetService from "./assets";
 
 export const assignAsset = async (data: Assignment) => {
   const { employee_id, asset_id } = data;
@@ -18,7 +19,8 @@ export const assignAsset = async (data: Assignment) => {
     [employee_id, asset_id]
   );
 
-  await db.query("UPDATE assets SET status='ASSIGNED' WHERE id=?", [asset_id]);
+  // mark asset as assigned using asset service helper
+  await assetService.markAssigned(asset_id);
 
   return { message: "Asset Assigned Successfully" };
 };
@@ -40,7 +42,7 @@ export const getEmployeeAssets = async (employee_id: number) => {
  
   const [rows] = await db.query(
     `SELECT 
-     aa.id, aa.employee_id, a.serial_number, a.type, a.store_id, aa.assigned_at
+     aa.id, aa.employee_id, aa.asset_id, a.serial_number, a.store_id, aa.assigned_at
      FROM asset_assignments aa
      JOIN assets a 
      ON aa.asset_id = a.id
@@ -51,13 +53,43 @@ export const getEmployeeAssets = async (employee_id: number) => {
   return rows;
 };
 
-// export const returnAsset = async (asset_id: number) => {
-//   await db.query(
-//     `UPDATE asset_assignments SET returned_at = NOW() WHERE asset_id = ? AND returned_at IS NULL`,
-//     [asset_id]
-//   );
+export const returnAsset = async (asset_id: number) => {
+  const [result]: any = await db.query(
+    `UPDATE asset_assignments 
+     SET returned_at = NOW() 
+     WHERE asset_id = ? AND returned_at IS NULL`,
+    [asset_id]
+  );
 
-//   await db.query(`UPDATE assets SET status='AVAILABLE' WHERE id=?`, [asset_id]);
+  if (result.affectedRows === 0)
+    throw new Error("No active assignment found for this asset");
 
-//   return { message: "Asset Returned Successfully" };
-// };
+  await db.query(`DELETE FROM asset_assignments WHERE asset_id = ? AND returned_at IS NOT NULL`, [asset_id]);
+
+  const asset = await assetService.markAvailable(asset_id);
+  return { message: "Asset Returned Successfully", asset };
+};
+
+export const reAssignAsset = async (data: Assignment) => {
+  const { employee_id, asset_id } = data;
+
+  const [active]: any = await db.query(
+    `SELECT id FROM asset_assignments 
+     WHERE asset_id = ? AND returned_at IS NULL`,
+    [asset_id]
+  );
+
+  if (active.length > 0) {
+    throw new Error("Asset is already assigned");
+  }
+
+  await db.query(
+    `INSERT INTO asset_assignments (employee_id, asset_id, assigned_at, returned_at)
+     VALUES (?, ?, NOW(), NULL)`,
+    [employee_id, asset_id]
+  );
+
+  const asset = await assetService.markAssigned(asset_id);
+
+  return { message: "Asset Reassigned Successfully", asset };
+};

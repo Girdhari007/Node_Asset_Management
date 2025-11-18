@@ -30,12 +30,22 @@ export const getEmployeeAssets = async (req: FastifyRequest, reply: FastifyReply
   }
 };
 
-// export const returnAsset = async (req: FastifyRequest, reply: FastifyReply) => {
-//   try {
-//     const { asset_id } = req.body as any;
-//     const result = await service.returnAsset(asset_id);
-//     reply.send(success("Asset returned successfully", result));
-//   } catch (err: any) {
-//     reply.status(400).send(error("Failed to return asset", err.message));
-//   }
-// };
+export const returnAsset = async (req: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const { asset_id } = req.body as any;
+    const result = await service.returnAsset(asset_id);
+    reply.send(success("Asset returned successfully", result));
+  } catch (err: any) {
+    reply.status(400).send(error("Failed to return asset", err.message));
+  }
+};
+
+export const reAssignAsset = async (req: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const body = req.body as any;
+    const result = await service.reAssignAsset(body);
+    reply.send(success("Asset reassigned successfully", result));
+  } catch (err: any) {
+    reply.status(400).send(error("Failed to reassign asset", err.message));
+  }
+};
