@@ -12,7 +12,9 @@ export default async function storesRoutes(fastify: FastifyInstance) {
     }
    } 
    , createStore);
+   
   fastify.get("/", listStores);
+
   fastify.get("/:id", 
    {
      schema:{

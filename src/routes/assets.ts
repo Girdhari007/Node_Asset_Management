@@ -5,13 +5,16 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 import { z } from "zod";
 
 export default async function assetsRoutes(fastify: FastifyInstance) {
+
   fastify.post("/",
     { 
       schema: { 
       body: zodToJsonSchema(createAssetSchema)
      } 
     },  createAsset);
+    
   fastify.get("/", getAllAssets);
+
   fastify.get("/:id",
     {
       schema:{

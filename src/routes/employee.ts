@@ -12,7 +12,9 @@ export default async function employeeRoutes(fastify: FastifyInstance) {
      }
    } 
    , createEmployee);
+
   fastify.get("/", getAllEmployees);
+  
   fastify.get("/:id",
      {
        schema:{

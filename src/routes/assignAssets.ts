@@ -11,6 +11,7 @@ import { createAssetSchema, updateAssetAssignmentSchema } from "../schemas/assig
 import zodToJsonSchema from "zod-to-json-schema";
 
 export default async function assignmentRoutes(fastify: FastifyInstance) {
+
   fastify.post("/assign",
     {
       schema:{
@@ -18,6 +19,7 @@ export default async function assignmentRoutes(fastify: FastifyInstance) {
     }
   }
    , assignAsset);
+
   fastify.post("/reassign",
     {
       schema:{
@@ -25,7 +27,9 @@ export default async function assignmentRoutes(fastify: FastifyInstance) {
       }
     }
    , reAssignAsset);
+
   fastify.get("/", getAllAssetsAssigned);
+
   fastify.get("/employee/:id",
     {
       schema:{
@@ -35,6 +39,7 @@ export default async function assignmentRoutes(fastify: FastifyInstance) {
       }
     }
    , getEmployeeAssets);
+
   fastify.patch("/return",
     {
       schema:{

@@ -2,6 +2,7 @@ import { db } from "../config/db";
 import { Assignment } from "../models/assignAssets";
 import * as assetService from "./assets";
 
+//assign Asset initially
 export const assignAsset = async (data: Assignment) => {
   const { employee_id, asset_id } = data;
 
@@ -19,12 +20,12 @@ export const assignAsset = async (data: Assignment) => {
     [employee_id, asset_id]
   );
 
-  // mark asset as assigned using asset service helper
   await assetService.markAssigned(asset_id);
 
   return { message: "Asset Assigned Successfully" };
 };
 
+// get all assets assigned
 export const getAllAssetsAssigned = async () => {
   const [rows] = await db.query(
     `SELECT 
@@ -38,6 +39,7 @@ export const getAllAssetsAssigned = async () => {
   return rows;
 };
 
+//get all assets assigned to an employee
 export const getEmployeeAssets = async (employee_id: number) => {
  
   const [rows] = await db.query(
@@ -53,6 +55,7 @@ export const getEmployeeAssets = async (employee_id: number) => {
   return rows;
 };
 
+// return asset
 export const returnAsset = async (asset_id: number) => {
   const [result]: any = await db.query(
     `UPDATE asset_assignments 

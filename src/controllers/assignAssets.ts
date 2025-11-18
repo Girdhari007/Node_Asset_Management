@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import * as service from "../services/assignAssets";
 import { success, error } from "../utils/response";
 
+//create AssignAsset method 
 export const assignAsset = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const result = await service.assignAsset(req.body as any);
@@ -11,6 +12,7 @@ export const assignAsset = async (req: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
+// get all Assigned Assets
 export const getAllAssetsAssigned = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const result = await service.getAllAssetsAssigned();
@@ -20,6 +22,7 @@ export const getAllAssetsAssigned = async (req: FastifyRequest, reply: FastifyRe
   }
 };
 
+//get assets for an Employee
 export const getEmployeeAssets = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const id = Number((req.params as any).id);
@@ -30,6 +33,7 @@ export const getEmployeeAssets = async (req: FastifyRequest, reply: FastifyReply
   }
 };
 
+//return asset
 export const returnAsset = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const { asset_id } = req.body as any;
@@ -40,6 +44,7 @@ export const returnAsset = async (req: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
+//reAssign asset
 export const reAssignAsset = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const body = req.body as any;

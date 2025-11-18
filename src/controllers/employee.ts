@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import * as service from "../services/employee";
 import { success, error } from "../utils/response";
 
+//create Employee
 export const createEmployee = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const result = await service.createEmployee(req.body as any);
