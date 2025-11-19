@@ -20,9 +20,9 @@ export const assignAsset = async (data: Assignment) => {
     [employee_id, asset_id]
   );
 
-  await assetService.markAssigned(asset_id);
+  const newAsset = await assetService.markAssigned(asset_id);
 
-  return { message: "Asset Assigned Successfully" };
+  return newAsset ;
 };
 
 // get all assets assigned
@@ -67,10 +67,8 @@ export const returnAsset = async (asset_id: number) => {
   if (result.affectedRows === 0)
     throw new Error("No active assignment found for this asset");
 
-  await db.query(`DELETE FROM asset_assignments WHERE asset_id = ? AND returned_at IS NOT NULL`, [asset_id]);
-
   const asset = await assetService.markAvailable(asset_id);
-  return { message: "Asset Returned Successfully", asset };
+  return asset;
 };
 
 export const reAssignAsset = async (data: Assignment) => {
@@ -93,6 +91,7 @@ export const reAssignAsset = async (data: Assignment) => {
   );
 
   const asset = await assetService.markAssigned(asset_id);
+await db.query(`DELETE FROM asset_assignments WHERE asset_id = ? AND returned_at IS NOT NULL`, [asset_id]);
 
-  return { message: "Asset Reassigned Successfully", asset };
+  return asset;
 };
