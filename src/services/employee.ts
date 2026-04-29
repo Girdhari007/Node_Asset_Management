@@ -1,6 +1,7 @@
 import { db } from "../config/db";
 import { Employee } from "../models/employee";
 
+// create Employee
 export const createEmployee = async (data: Employee) => {
   const { name, email, department, store_id } = data;
 

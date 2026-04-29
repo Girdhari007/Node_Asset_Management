@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import * as service from "../services/assets";
 import { success, error } from "../utils/response";
 
+//create asset
 export const createAsset = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const result = await service.createAsset(req.body as any);
@@ -14,7 +15,8 @@ export const createAsset = async (req: FastifyRequest, reply: FastifyReply) => {
 //get all assets
 export const getAllAssets = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
-    const result = await service.getAllAssets();
+    const status = (req.query as any).status;
+    const result = await service.getAllAssets(status);
     reply.send(success("All assets fetched", result));
   } catch (err: any) {
     reply.status(400).send(error("Failed to fetch assets", err.message));

@@ -6,7 +6,9 @@ import assignmentRoutes from "./routes/assignAssets";
 import storesRoutes from "./routes/store";
 
 export function buildServer() {
-  const fastify = Fastify({ logger: true });
+  const fastify = Fastify({ 
+    logger: true,
+  });
 
   fastify.get("/", async () => {
     return { message: "Welcome to the Asset Management Project" };

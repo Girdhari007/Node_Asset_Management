@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import * as service from "../services/store";
 import { success, error } from "../utils/response";
 
+//create store
 export const createStore = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const result = await service.createStore(req.body as any);
@@ -11,6 +12,7 @@ export const createStore = async (req: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
+//get all stores
 export const listStores = async (_req: FastifyRequest, reply: FastifyReply) => {
   try {
     const result = await service.getStores();
@@ -20,6 +22,7 @@ export const listStores = async (_req: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
+//get store by id
 export const getStore = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const id = Number((req.params as any).id);
